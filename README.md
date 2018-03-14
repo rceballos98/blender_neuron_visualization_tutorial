@@ -11,7 +11,7 @@ Blender is a very powerful open source 3D modeling and animation software. It ha
 ## Installation
 1. [Install Blender](https://www.blender.org/download/)
 2. [Install NeuroMorph Toolbox](https://github.com/NeuroMorph-EPFL/NeuroMorph)
-3. Activate the Neuromorph Add Ons 
+3. Activate the Neuromorph Add Ons [(Tutorial)](https://www.youtube.com/watch?v=CVkcYjWgceM).
 
 ## Importing Data
 1. Use the neuromorph Add On to import a neuron. [(Tutorial)](https://www.youtube.com/watch?v=CVkcYjWgceM)

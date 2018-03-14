@@ -11,16 +11,19 @@ Blender is a very powerful open source 3D modeling and animation software. It ha
 ## Installation
 1. [Install Blender](https://www.blender.org/download/)
 2. [Install NeuroMorph Toolbox](https://github.com/NeuroMorph-EPFL/NeuroMorph)
-3. Activate the Neuromorph Add Ons [(Tutorial)](https://www.youtube.com/watch?v=CVkcYjWgceM).
+3. Activate the Neuromorph Add Ons 
 
 ## Importing Data
 1. Use the neuromorph Add On to import a neuron. [(Tutorial)](https://www.youtube.com/watch?v=CVkcYjWgceM)
 Be careful about the scaling option right above the import button. For the .obj sample neuron meshes provided here you need to use a scaling of 0.001.
 2. If you follows these steps and import sample neuron 14023 you should be able to move around the camera to find the neuron, it should look something like this:
-![neuron_14023](img/neuron_14023.jpg)
+![neuron_14023](img/imported_neuron)
 It might be tempting to move your neuron so that it is centered on the scene but if you are going to keep adding other data points I recommend you leave the neuron where it spanned so that your locations are consistent. To view your neuron more closely, [learn how to move](https://www.katsbits.com/tutorials/blender/learning-keyboard-mouse-navigation.php) your point of view about the scene instead.
 3. Run blender_script.py to load and add vectors that show the synaptic pairs as arrows pointing from the pre to the post-synaptic location. 
 This script does a very specific procedure of loading pre/post synaptic location and spanning arrows along the pre-post vector direction. 
+![](img/imported_synapses)
+4. Finally, you can change the color of the arrows in the neuron by editing the color of the material of the imported sample arrow.
+![](img/change_arrow_color.jpeg)
 
 ## Rendering
 
@@ -43,9 +46,11 @@ On this mode, select the there inward faces of the cube an delete them by pressi
 ![cycles_option](img/cycles_option.jpeg)
 12. Replace you point light source for a plane. (`shift+A`>`plane`). When the object is selected you can can press `G` and move it and `R` to rotate it.
 ![plane_lamp](img/plane_lamp.jpeg)
-13. Make the plane light emitting by giving it an emitting surface.
+13. Make the plane emit light by giving it an emitting surface. Using several of these (usually 3) with different light intensities usually gives the best results.
 ![emit_option](img/emit_option.jpeg)
-14. You can also set the material of the neuron to Glossy BFDS for better shadows. And hit render, this is how it looks
+14. Set the material of the neuron to Mix Shader and set one shader to Diffuse BSDF and the other to Glossy BSDF. Adjust the proportion of each with the Fac setting.
+![](img/Mixed_surface.jpeg)
+15. Render:
 ![cycles](img/cycles.png)
 
 

@@ -15,20 +15,20 @@ import numpy as np
 
 # get your volumetric/location data
 data = h5py.File('/Users/rodrigo/rc2529/datasets/cremi/sample_C_padded_20160501.hdf','r')
-pred = h5py.File('/Users/rodrigo/rc2529/Projects/neuronTracing/paper/cremi_sample.hdf','r')
+# pred = h5py.File('/Users/rodrigo/rc2529/Projects/neuronTracing/paper/cremi_sample.hdf','r')
 
-loaded_locs = pred['/annotations/locations'][...]
+# loaded_locs = pred['/annotations/locations'][...]
 gt_locs = data['/annotations/locations'][...]
 gt_ids = data['/annotations/ids'][...]
 gt_partners = data['/annotations/presynaptic_site/partners'][...]
 labels = data['/volumes/labels/neuron_ids'][...]
-raw = data['/volumes/raw'][...]
+# raw = data['/volumes/raw'][...]edit medi
 
 # IDs for relevant neurons
-id1 = 14023
-id2 = 16111
+id1 = 16111
+id2 = 14023
 
-pre_locs_pairs, post_locs_pairs = pf.get_locations_for_partners(gt_locs, gt_partners, gt_ids,labels, id1, id2)
+pre_locs_pairs, post_locs_pairs = pf.get_locations_for_partners(gt_locs, gt_partners, gt_ids, labels, id1, id2)
 
 # arrow scaling in xyz dimension
 arrow_scaling = (1,1,1)
@@ -49,14 +49,24 @@ arrow_scaling = (1,1,1)
 # this should match the scaling you used to import your neuron object
 vector_scale = 0.001
 
+# Define/Calculate offsets and voxel size
+offset = np.floor((np.array(raw.shape) - np.array(labels.shape))/2).astype('int')
+voxel_size = np.array([40,4,4])
+offset = offset*voxel_size
+xyz_offset = pf.switch_zx(offset)
+
+
+# get neuron object
+neuron_obj = bpy.data.objects['neuron-16111']
+
+# Plot Pre synaptic
+
 # import arrow object mesh
 file_loc = '/Users/rodrigo/repos/neuronVisualizationScripts/meshes/sample_arrow.obj'
 imported_object = bpy.ops.import_scene.obj(filepath=file_loc)
 obj_object = bpy.context.selected_objects[0] ####<--Fix
 pre_syn_arrow_mesh = bpy.data.objects[obj_object.name].data
 
-# get neuron object
-neuron_obj = bpy.data.objects['neuron-14023']
 
 # create an empty that will be parent to all arrows
 # this creates a hierarchy that allows you to manipulate
@@ -67,24 +77,16 @@ bpy.context.scene.objects.link( pre_syn_arr)
 # make it a child of the main neuron
 pre_syn_arr.parent = neuron_obj
 
-# Define/Calculate offsets and voxel size
-offset = np.floor((np.array(raw.shape) - np.array(labels.shape))/2).astype('int')
-voxel_size = np.array([40,4,4])
-offset = offset*voxel_size
-xyz_offset = pf.switch_zx(offset)
-
 scene = bpy.context.scene
 
 # for each pre-post synaptic location pair, create an arrow
 # that begin at the pre synaptic location and is rotated
 # to match the vector direction the post synaptic location
 for loc_pair in pre_locs_pairs:
-
     # create vector
     head = pf.switch_zx(loc_pair[0])
     tail = pf.switch_zx(loc_pair[1])
     v1, v2 = Vector((head+xyz_offset)*vector_scale), Vector((tail+xyz_offset)*vector_scale)
-
     # create arrow
     obj = bpy.data.objects.new("preSyn", pre_syn_arrow_mesh)
     obj.scale = arrow_scaling
@@ -93,3 +95,5 @@ for loc_pair in pre_locs_pairs:
     obj.rotation_quaternion = (v2-v1).to_track_quat('Z','Y')
     obj.parent = pre_syn_arr
     scene.objects.link(obj)
+
+# Plot post synaptic
